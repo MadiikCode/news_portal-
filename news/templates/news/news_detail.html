@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/news/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card mb-4 shadow-sm">
+        {% if news.image %}
+            <img src="{{ news.image.url }}" class="card-img-top" alt="{{ news.title }}">
+        {% endif %}
+        <div class="card-body">
+            <h1 class="card-title">{{ news.title }}</h1>
+            <p class="text-muted">
+                Автор: <strong>{{ news.author }}</strong> |
+                Опубликовано: {{ news.published_date|date:"d.m.Y H:i" }}
+            </p>
+            {% if news.category %}
+                <p class="text-secondary">Категория: {{ news.category.name }}</p>
+            {% endif %}
+            <hr>
+            <p class="card-text" style="white-space: pre-line;">{{ news.content }}</p>
+            <a href="{% url 'news_list' %}" class="btn btn-outline-primary mt-3">← Назад к списку</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

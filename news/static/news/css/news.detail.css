@@ -1,0 +1,40 @@
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    background-color: #ffffff;
+}
+
+.card:hover {
+    transform: scale(1.01);
+}
+
+.card-img-top {
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+.card-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+.text-muted, .text-secondary {
+    font-size: 0.9rem;
+    color: #777 !important;
+}
+
+.btn-outline-primary {
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+}
