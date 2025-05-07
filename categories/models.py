@@ -7,9 +7,10 @@ from django.urls import reverse
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
-    slug = models.SlugField(max_length=100, unique=True, verbose_name='URL')
+    slug = models.SlugField(max_length=100, unique=True, verbose_name='URL',blank=True)
     description = models.TextField(blank=True, verbose_name='Описание')
     image = models.ImageField(upload_to='categories/', blank=True)
+ #   category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Категория'

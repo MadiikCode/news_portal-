@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
-
+from categories.models import Category
 
 
 class News(models.Model):
@@ -12,7 +12,7 @@ class News(models.Model):
     image = models.ImageField(upload_to='news_images/',verbose_name='Изображение',null=True, blank=True )
     created_at = models.DateTimeField( verbose_name='Дата создания' ,auto_now_add=True )
     is_published = models.BooleanField(default=True)
-
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='news',verbose_name='Категория')
 
     class Meta:
         verbose_name = 'Новость'
@@ -27,15 +27,8 @@ class News(models.Model):
         return reverse('news_detail', kwargs={'pk': self.pk})
 
 class Category(models.Model):
-    name = models.CharField(
-        max_length=100,
-        verbose_name='Название категории'
-    )
-    slug = models.SlugField(
-        max_length=100,
-        unique=True,
-        verbose_name='URL категории'
-    )
+    name = models.CharField(max_length=100,verbose_name='Название категории')
+    slug = models.SlugField(max_length=100,unique=True,verbose_name='URL категории')
 
     class Meta:
         verbose_name = 'Категория'

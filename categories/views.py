@@ -6,27 +6,16 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 
-
-
 def category_list(request):
     categories = Category.objects.all()
     return render(request, 'categories/category_list.html', {'categories': categories})
 
+
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    return render(request, 'categories/category_detail.html', {'category': category})
+    news_in_category = category.news.all()  # работает, потому что related_name='news'
 
-def category_add(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('category_list')
-    else:
-        form = CategoryForm()
-    return render(request, 'categories/category_add.html', {'form': form})
-
-
-def custom_logout(request):
-    logout(request)
-    return redirect('news_list')
+    return render(request, 'categories/category_detail.html', {
+        'category': category,
+        'news': news_in_category,
+    })
