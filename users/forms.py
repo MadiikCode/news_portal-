@@ -1,13 +1,23 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User  # Изменяем импорт
 
-class SignUpForm(UserCreationForm):
+
+class UserRegisterForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput(), label='Подтверждение пароля')
+
     class Meta:
         model = User
-        fields = ('email', 'password1', 'password2')
+        fields = ['username', 'email']
 
-class UserProfileForm(forms.ModelForm):
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError("Пароли не совпадают")
+        return password2
+
+class UserSignForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
+        fields = ['username', 'password']

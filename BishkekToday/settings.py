@@ -133,17 +133,7 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AUTH_USER_MODEL = 'users.User'  # замените 'users' на имя вашего приложения
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # для тестирования
-
-# Настройки для подтверждения email
-EMAIL_HOST = 'smtp.your-email-provider.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@example.com'
-EMAIL_HOST_PASSWORD = 'your-email-password'
-DEFAULT_FROM_EMAIL = 'your-email@example.com'
-
+AUTH_USER_MODEL = 'users.User'
 
 LOGOUT_REDIRECT_URL = 'news_list'  # Перенаправлять на главную после выхода
 

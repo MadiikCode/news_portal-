@@ -1,48 +1,54 @@
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
+/* Базовые стили */
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --dark: #1e293b;
+    --light: #f8fafc;
+    --gray: #94a3b8;
+    --white: #ffffff;
+}
+
+* {
     margin: 0;
     padding: 0;
-    color: #333;
-    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f1f5f9;
+    color: var(--dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .container {
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
 }
 
-
+/* Навигационное меню */
 .navbar {
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.5rem;
+/* Карточки новостей */
+.card {
+    transition: transform 0.2s;
 }
 
-.nav-link {
-    font-weight: 500;
+.card:hover {
+    transform: scale(1.02);
 }
 
-
-main {
-    min-height: 70vh;
-}
-
-
-footer {
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-}
-
-
-.text-center {
+/* Подвал */
+.footer {
+    background: var(--primary);
+    color: var(--white);
+    padding: 40px 0 20px;
     text-align: center;
 }
-
-.mt-4 { margin-top: 1.5rem; }
-.mb-4 { margin-bottom: 1.5rem; }
-.my-4 { margin: 1.5rem 0; }

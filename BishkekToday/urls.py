@@ -11,7 +11,6 @@ urlpatterns = [
     path('news/', include('news.urls')),
     path('', include('news.urls')),
     path('categories/', include('categories.urls')),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('users/', include('users.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

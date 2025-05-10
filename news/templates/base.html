@@ -1,69 +1,63 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Новостной портал{% endblock %}</title>
-
-    <!-- Подключение Bootstrap 5 (опционально) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}MMORPG Новости{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css" integrity="sha384-NvKbDTEnL+A8F/AA5Tc5kmMLSJHUO868P+lDtTpJIeQdGYaUIuLr4lVGOEA1OcMy" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
-    {% block extra_head %}
-
-    <!-- Статические файлы -->
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/news/style.css' %}">
-
-
-
-    <!-- Дополнительные head-теги -->
-    {% endblock %}
 </head>
-<body>
-    <!-- Навигационное меню -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="/">Новости</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<body class="bg-dark text-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">BishkekToday</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'news_list' %}">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'category_list' %}">Категории</a>
-                </li>
+                {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'category_detail' category.pk %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
-                    </li>
-                {% endif %}
-            </ul>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'news_create' %}">➕ Добавить</a></li>
+                         <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}">🚪 Выйти</a></li>
+    {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'users:sign' %}">🔐 Войти</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'users:register' %}">📝 Регистрация</a></li>
+    {% endif %}
+</ul>
         </div>
     </div>
 </nav>
 
-    <!-- Основное содержимое -->
-    <main class="container my-8">
-        {% block content %}
-        <!-- Сюда будет подставляться контент дочерних шаблонов -->
-        {% endblock %}
-    </main>
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-    <!-- Футер -->
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p>&copy; {% now "Y" %} Новостной портал. Все права защищены.</p>
-        </div>
-    </footer>
+    {% block content %}
+    {% endblock %}
+</div>
 
-    <!-- Подключение JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {% block scripts %}{% endblock %}
+<footer class="bg-secondary text-center text-light mt-5 py-4">
+    <p>© 2025 BishkekToday — Все права защищены.</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Категории новостей</h1>
-    
+    <a href="{% url 'category_create' %}">Создать категорию</a>
     <div class="row">
         {% for category in categories %}
         <div class="col-md-4 mb-4">

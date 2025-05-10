@@ -24,15 +24,5 @@ class News(models.Model):
 
 
     def get_absolute_url(self):
-        return reverse('news_detail', kwargs={'pk': self.pk})
+        return reverse('news_detail2', kwargs={'pk': self.pk})
 
-class Category(models.Model):
-    name = models.CharField(max_length=100,verbose_name='Название категории')
-    slug = models.SlugField(max_length=100,unique=True,verbose_name='URL категории')
-
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
-
-    def __str__(self):
-        return self.name

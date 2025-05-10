@@ -1,54 +1,69 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.conf import settings
-from .forms import SignUpForm, UserProfileForm
-from .models import User
-import uuid
+from django.contrib.auth.models import User
+from django.contrib.auth import (
+    authenticate, login, logout
+)
+from .forms import UserRegisterForm, UserSignForm
 
 
-def sign_up(request):
+def register_user_view(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False  # Пользователь не активен до подтверждения
-            user.verification_token = str(uuid.uuid4())
-            user.save()
+        form_register_user = UserRegisterForm(request.POST)
+        if form_register_user.is_valid():
+            username = form_register_user.cleaned_data['username']
+            email = form_register_user.cleaned_data['email']
+            password = form_register_user.cleaned_data['password']
 
-            # Отправка email с подтверждением
-            subject = 'Подтвердите ваш email'
-            message = f'Для подтверждения перейдите по ссылке: http://{request.get_host()}/verify-email/{user.verification_token}/'
-            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+            if User.objects.filter(username=username).exists():
+                form_register_user.add_error('username', 'Пользователь с таким именем уже существует.')
 
-            return redirect('verify_email')
+            elif User.objects.filter(email=email).exists():
+                form_register_user.add_error('email', 'Пользователь с таким email уже существует.')
+
+            else:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                )
+                user.save()
+                authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('news:news')
+
     else:
-        form = SignUpForm()
-    return render(request, 'users/sign_up.html', {'form': form})
+        form_register_user = UserRegisterForm()
+
+    context = {'form_register_user': form_register_user}
+    return render(request, 'users/register.html', context)
 
 
-@login_required
-def profile(request):
+def sign_user_view(request):
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
+        form_sign_user = UserSignForm(request.POST)
+        if form_sign_user.is_valid():
+            username = form_sign_user.cleaned_data['username']
+            password = form_sign_user.cleaned_data['password']
+
+            # Используем authenticate для проверки пользователя
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # Пользователь найден, логиним
+                login(request, user)
+                return redirect('news:news')
+            else:
+                # Ошибка аутентификации, добавляем ошибку на форму
+                form_sign_user.add_error('username', 'Неверное имя пользователя или пароль.')
+
     else:
-        form = UserProfileForm(instance=request.user)
-    return render(request, 'users/user_profile.html', {'form': form})
+        form_sign_user = UserSignForm()
+
+    context = {'form_sign_user': form_sign_user}
+    return render(request, 'users/sign.html', context)
 
 
-def verify_email(request, token):
-    try:
-        user = User.objects.get(verification_token=token)
-        user.is_active = True
-        user.email_verified = True
-        user.verification_token = None
-        user.save()
-        login(request, user)
-        return redirect('profile')
-    except User.DoesNotExist:
-        return render(request, 'users/verify_email.html', {'success': False})
-
+def sign_out_user_view(request):
+    logout(request)  # ✅ просто передаём request
+    return redirect('news:news')  # или на главную после выхода
