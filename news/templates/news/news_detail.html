@@ -8,11 +8,13 @@
         <div class="col-lg-8">
             <!-- Хлебные крошки -->
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'news_list' %}">Главная</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'category_detail' news.category.slug %}">{{ news.category.name }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ news.title|truncatechars:30 }}</li>
-                </ol>
+             <li class="breadcrumb-item">
+    {% if news.category.slug %}
+        <a href="{% url 'category_detail' news.category.slug %}">{{ news.category.name }}</a>
+    {% else %}
+        {{ news.category.name }}
+    {% endif %}
+</li>
             </nav>
 
             <!-- Заголовок -->
@@ -24,9 +26,6 @@
                 <span class="me-3"><i class="bi bi-eye me-1"></i> {{ news.views_count }}</span>
                 <span><i class="bi bi-person me-1"></i> {{ news.author.username }}</span>
             </div>
-
-            <!-- Изображение -->
-            <img src="{{ news.image.url }}" class="img-fluid rounded-3 mb-4 w-100" alt="{{ news.title }}">
 
             <!-- Контент -->
             <div class="news-content mb-5">

@@ -10,9 +10,8 @@ def news_list(request):
   #  news = News.objects.filter(is_published=True).order_by('-created_at')
    # print(f"Найдено новостей: {news.count()}")
   #  return render(request, 'news/news_list.html', {'news': news})
-  news_list = News.objects.all()  # Получите все новости
-  return render(request, 'news/news_list.html', {'news_list': news_list})
-
+      news = News.objects.filter(is_published=True).order_by('-created_at')
+      return render(request, 'news/news_list.html', {'news': news})
 
 def news_detail(request, pk):
     news = get_object_or_404(News, pk=pk, is_published=True)

@@ -29,8 +29,7 @@ INSTALLED_APPS = [
 
     'news',
     'categories',
-    'users',
-]
+    'users',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -133,9 +132,8 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AUTH_USER_MODEL = 'users.User'
-
 LOGOUT_REDIRECT_URL = 'news_list'  # Перенаправлять на главную после выхода
+LOGIN_REDIRECT_URL = '/news/'  # или на ту страницу, которую должен видеть пользователь
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
