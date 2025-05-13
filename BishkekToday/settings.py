@@ -28,8 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'news',
-    'categories',
-    'users',]
+# 'categories',
+    'users',
+   ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -39,6 +40,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',  # <-- должно быть!
+
 ]
 
 ROOT_URLCONF = 'BishkekToday.urls'
@@ -122,15 +125,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Настройки статики
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Добавлена закрывающая скобка
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),  # Добавлена закрывающая скобка
+# ]
+AUTH_USER_MODEL = 'users.User'
 
 # Настройки медиа
 MEDIA_URL = '/media/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Для Path: BASE_DIR / 'media'
 
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
 
 LOGOUT_REDIRECT_URL = 'news_list'  # Перенаправлять на главную после выхода
 LOGIN_REDIRECT_URL = '/news/'  # или на ту страницу, которую должен видеть пользователь

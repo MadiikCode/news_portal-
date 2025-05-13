@@ -1,18 +1,60 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm
-from django.contrib import messages
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import RegisterForm, LoginForm, ProfileForm
 
 
-
-def register(request):
+def register_view(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Регистрация прошла успешно! Теперь можно читать новости.')
-            return redirect('news_list')  # ← ВОТ ЭТА СТРОКА
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Вы успешно зарегистрировались!')
+            return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
     else:
         form = RegisterForm()
+
     return render(request, 'users/register.html', {'form': form})
 
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f'Добро пожаловать, {user.username}!')
+            return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+    else:
+        form = LoginForm()
+
+    return render(request, 'users/login.html', {'form': form})
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'Вы вышли из системы')
+    return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Профиль успешно обновлен!')
+            return redirect('users:profile')
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'users/profile.html', {'form': form})

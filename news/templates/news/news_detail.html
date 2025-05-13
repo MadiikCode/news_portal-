@@ -1,128 +1,18 @@
 {% extends 'base.html' %}
-
-{% block title %}{{ news.title }}{% endblock %}
+{% block title %}{{ news_detail.title }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Хлебные крошки -->
-            <nav aria-label="breadcrumb">
-             <li class="breadcrumb-item">
-    {% if news.category.slug %}
-        <a href="{% url 'category_detail' news.category.slug %}">{{ news.category.name }}</a>
-    {% else %}
-        {{ news.category.name }}
+    <h2>{{ news_detail.title }}</h2>
+    <p>{{ news_detail.content }}</p>
+    <p><small>{{ news_detail.created_at }}</small></p>
+{% if news_detail.image %}
+    <img src="{{ news_detail.image.url }}" alt="Новость" class="img-fluid">
+{% endif %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'news:update' news_detail.pk %}" class="btn btn-warning">Обновить</a>
+        <a href="{% url 'news:delete' news_detail.pk %}" class="btn btn-danger">Удалить</a>
+
     {% endif %}
-</li>
-            </nav>
-
-            <!-- Заголовок -->
-            <h1 class="fw-bold mb-3">{{ news.title }}</h1>
-
-            <!-- Мета-информация -->
-            <div class="d-flex align-items-center mb-4 text-muted">
-                <span class="me-3"><i class="bi bi-calendar me-1"></i> {{ news.published_at|date:"d.m.Y H:i" }}</span>
-                <span class="me-3"><i class="bi bi-eye me-1"></i> {{ news.views_count }}</span>
-                <span><i class="bi bi-person me-1"></i> {{ news.author.username }}</span>
-            </div>
-
-            <!-- Контент -->
-            <div class="news-content mb-5">
-                {{ news.content|safe }}
-            </div>
-
-            <!-- Теги -->
-            {% if news.tags.all %}
-            <div class="mb-5">
-                <h5 class="mb-3">Теги</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    {% for tag in news.tags.all %}
-                    <a href="{% url 'tag_detail' tag.slug %}" class="btn btn-sm btn-outline-secondary">#{{ tag.name }}</a>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Комментарии -->
-            <div class="mb-5" id="comments">
-                <h5 class="mb-4">Комментарии ({{ news.comments.count }})</h5>
-
-                {% if user.is_authenticated %}
-                <form method="post" class="mb-4">
-                    {% csrf_token %}
-                    <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Оставьте комментарий" id="commentText" name="text" style="height: 100px"></textarea>
-                        <label for="commentText">Ваш комментарий</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Отправить</button>
-                </form>
-                {% else %}
-                <div class="alert alert-info">
-                    <a href="{% url 'users:sign' %}" class="alert-link">Войдите</a>, чтобы оставить комментарий
-                </div>
-                {% endif %}
-
-                {% for comment in news.comments.all %}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="card-title mb-0">{{ comment.user.username }}</h6>
-                            <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
-                        </div>
-                        <p class="card-text">{{ comment.text }}</p>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="text-center py-4 text-muted">
-                    <i class="bi bi-chat-square-text fs-1"></i>
-                    <p class="mt-2">Пока нет комментариев. Будьте первым!</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- Сайдбар -->
-        <div class="col-lg-4">
-            <div class="sticky-top" style="top: 20px;">
-                <!-- Похожие новости -->
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Похожие новости</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            {% for similar in similar_news %}
-                            <a href="{% url 'news_detail' similar.slug %}" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">{{ similar.title|truncatechars:40 }}</h6>
-                                </div>
-                                <small class="text-muted">{{ similar.published_at|date:"d.m.Y" }}</small>
-                            </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Популярные новости -->
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Популярное</h5>
-                    </div>
-                    <div class="card-body">
-                        {% for popular in popular_news %}
-                        <div class="d-flex mb-3">
-                            <img src="{{ popular.image.url }}" class="rounded me-3" width="80" height="60" style="object-fit: cover;">
-                            <div>
-                                <h6 class="mb-1"><a href="{% url 'news_detail' popular.slug %}" class="text-decoration-none">{{ popular.title|truncatechars:40 }}</a></h6>
-                                <small class="text-muted">{{ popular.published_at|date:"d.m.Y" }}</small>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

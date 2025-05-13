@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ category.name }}</h1>
+<p>{{ category.description }}</p>  <!-- Добавь описание, если нужно -->
+<!-- Добавить список новостей категории -->
+{% for news_item in category.news.all %}
+    <div>
+        <h2>{{ news_item.title }}</h2>
+        <p>{{ news_item.content }}</p>
+    </div>
+{% endfor %}
+{% endblock %}
