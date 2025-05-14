@@ -9,7 +9,7 @@ from news.views import news_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', news_list, name='home'),  # ← Главная страница теперь работает!
+    path('', news_list, name='home'),
     path('news/', include(('news.urls', 'news'), namespace='news')),
     path('users/', include("users.urls")),
 

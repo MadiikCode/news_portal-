@@ -12,7 +12,7 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Вы успешно зарегистрировались!')
-            return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+            return redirect('news:news')
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
@@ -29,7 +29,7 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f'Добро пожаловать, {user.username}!')
-            return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+            return redirect('news:news')
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
@@ -43,7 +43,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.info(request, 'Вы вышли из системы')
-    return redirect('news:news')  # ✅ Редирект на главную страницу новостей
+    return redirect('news:news')
 
 
 @login_required

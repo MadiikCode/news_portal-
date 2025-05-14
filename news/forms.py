@@ -1,5 +1,3 @@
-# news/forms.py
-
 from django import forms
 from .models import News, Category
 from django import template

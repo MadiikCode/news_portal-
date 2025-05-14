@@ -90,7 +90,6 @@ class NewsDetailView(DetailView):
 
 
 def news_create_view(request, category_slug=None):
-    # Если категория нужна, но не обязательна
     category = None
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
@@ -143,7 +142,7 @@ def add_category(request):
         if form.is_valid():
             try:
                 form.save()
-                return redirect('news:category_list')  # Редирект на список категорий
+                return redirect('news:category_list')
             except IntegrityError:
                 form.add_error('slug', 'Категория с таким слагом уже существует.')
     else:
@@ -160,5 +159,4 @@ def category_list(request):
 
 def category_detail(request, pk):
     category = get_object_or_404(Category, pk=pk)
-    # Можно добавить дополнительную логику, например, для вывода новостей этой категории
     return render(request, 'news/category_detail.html', {'category': category})

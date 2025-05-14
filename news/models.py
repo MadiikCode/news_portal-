@@ -9,12 +9,11 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
-        # Если slug не указан, генерируем его на основе имени
         if not self.slug:
             self.slug = slugify(self.name)
             # Убедимся, что slug уникален
             while Category.objects.filter(slug=self.slug).exists():
-                self.slug = slugify(self.name + str(self.id))  # Делаем slug уникальным
+                self.slug = slugify(self.name + str(self.id))
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -23,7 +22,7 @@ class Category(models.Model):
 class News(models.Model):
     title = models.CharField( max_length=100, verbose_name='Заголовок',default='Без названия')
     content = models.TextField(verbose_name='Содержание')
-    published_date = models.DateTimeField(verbose_name='Дата публикации',default=timezone.now ) # Используем timezone.now вместо auto_now_add для гибкости)
+    published_date = models.DateTimeField(verbose_name='Дата публикации',default=timezone.now )
     author = models.CharField( max_length=100,verbose_name='Автор', default='Администратор' )
     image = models.ImageField(upload_to='news_images/',verbose_name='Изображение',null=True, blank=True )
     created_at = models.DateTimeField( verbose_name='Дата создания' ,auto_now_add=True )
